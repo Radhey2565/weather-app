@@ -2,6 +2,10 @@
 
 A simple and responsive weather application built using HTML, CSS, and JavaScript.
 
+## Preview
+
+![Weather App Screenshot](screenshot.png)
+
 ## 🚀 Features
 
 - Search weather by city name
