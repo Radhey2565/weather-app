@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    width:400px;
+    text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+h1{
+    margin-bottom:20px;
+    color:#333;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    outline:none;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+.weather-card{
+    margin-top:20px;
+    display:none;
+}
+
+.weather-card img{
+    width:80px;
+}
+
+.weather-card p{
+    margin-top:10px;
+    font-size:18px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌦 Weather App</h1>
+
+    <div class="search-box">
+        <input type="text" id="city" placeholder="Enter City Name">
+        <button onclick="getWeather()">Search</button>
+    </div>
+
+    <div class="weather-card" id="weatherResult">
+        <h2 id="location"></h2>
+        <img id="icon" src="" alt="Weather Icon">
+        <p id="temp"></p>
+        <p id="condition"></p>
+        <p id="humidity"></p>
+        <p id="wind"></p>
+    </div>
+</div>
+
+<script>
+async function getWeather() {
+
+    const city = document.getElementById("city").value.trim();
+
+    if(city === ""){
+        alert("Please enter a city name");
+        return;
+    }
+
+    const apiKey = "a790e511b624445bb91164742261106";
+
+    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+    try {
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if(data.error){
+            alert(data.error.message);
+            return;
+        }
+
+        document.getElementById("weatherResult").style.display = "block";
+
+        document.getElementById("location").innerText =
+            `${data.location.name}, ${data.location.country}`;
+
+        document.getElementById("temp").innerText =
+            `🌡 Temperature: ${data.current.temp_c} °C`;
+
+        document.getElementById("condition").innerText =
+            `☁ Condition: ${data.current.condition.text}`;
+
+        document.getElementById("humidity").innerText =
+            `💧 Humidity: ${data.current.humidity}%`;
+
+        document.getElementById("wind").innerText =
+            `🌬 Wind Speed: ${data.current.wind_kph} km/h`;
+
+        document.getElementById("icon").src =
+            "https:" + data.current.condition.icon;
+
+    } catch(error) {
+        console.error(error);
+        alert("Unable to fetch weather data.");
+    }
+}
+
+// Search weather when Enter key is pressed
+document.getElementById("city").addEventListener("keypress", function(event) {
+    if(event.key === "Enter") {
+        getWeather();
+    }
+});
+</script>
+
+</body>
+</html>
